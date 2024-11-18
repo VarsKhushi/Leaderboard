@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         let filteredData = [...data]; // Keep original data separate
         const leaderboardBody = document.getElementById('leaderboard-body');
         const sectionFilter = document.getElementById('section-filter');
+        const searchInput = document.getElementById('search-input');
 
         // Populate section filter dropdown
         const populateSectionFilter = () => {
@@ -72,10 +73,16 @@ document.addEventListener('DOMContentLoaded', async () => {
         };
 
         // Filter function
-        const filterData = (section) => {
-            filteredData = section === 'all' 
-                ? [...data]
-                : data.filter(student => (student.section || 'N/A') === section);
+        const filterData = () => {
+            const selectedSection = sectionFilter.value;
+            const searchTerm = searchInput.value.toLowerCase();
+
+            filteredData = data.filter(student => {
+                const sectionMatch = selectedSection === 'all' || (student.section || 'N/A') === selectedSection;
+                const nameMatch = student.name.toLowerCase().includes(searchTerm);
+                return sectionMatch && nameMatch;
+            });
+
             renderLeaderboard(filteredData);
         };
 
@@ -105,9 +112,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         renderLeaderboard(data);
 
         // Event Listeners
-        sectionFilter.addEventListener('change', (e) => {
-            filterData(e.target.value);
-        });
+        sectionFilter.addEventListener('change', filterData);
+        searchInput.addEventListener('input', filterData);
 
         document.getElementById('export-btn').addEventListener('click', () => {
             exportToCSV(filteredData); // Export only filtered data

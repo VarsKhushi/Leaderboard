@@ -15,3 +15,12 @@ tr {
 tr:hover {
     background-color: rgba(255, 255, 255, 0.1);
 }
+
+#search-input {
+    width: 200px;
+    transition: width 0.3s ease-in-out;
+}
+
+#search-input:focus {
+    width: 250px;
+}
